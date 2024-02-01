@@ -1,6 +1,8 @@
 from django.shortcuts import render
 from rango.models import Category
 from rango.models import Page
+from rango.forms import CategoryForm
+from django.shortcuts import redirect
 
 def index(request):
     # get the first five categories by number of likes 
@@ -33,3 +35,21 @@ def show_category(request, category_name_slug):
         context_dict['pages'] = None
     
     return render(request, 'rango/category.html', context=context_dict)
+
+def add_category(request):
+    form = CategoryForm()
+
+    if request.method == 'POST':
+        form = CategoryForm(request.POST)
+
+        # have we been provided with a valid form?
+        if form.is_valid():
+            # save the new category to the database
+            form.save(commit=True)
+            # redirect the user back to the index view
+            return redirect('/rango/')
+        else:
+            # if there are errors, print them out
+            print(form.errors)
+    
+    return render(request, 'rango/add_category.html', {'form': form})
