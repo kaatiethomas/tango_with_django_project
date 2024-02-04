@@ -6,8 +6,9 @@ from rango.forms import CategoryForm
 from rango.forms import PageForm
 from django.shortcuts import redirect
 from rango.forms import UserForm, UserProfileForm
-from django.contrib.auth import authenticate, login
+from django.contrib.auth import authenticate, login, logout
 from django.http import HttpResponse
+from django.contrib.auth.decorators import login_required
 
 def index(request):
     # get the first five categories by number of likes 
@@ -146,3 +147,12 @@ def user_login(request):
         
     else:
         return render(request, 'rango/login.html')
+    
+@login_required
+def user_logout(request):
+    logout(request)
+    return redirect(reverse('rango:index'))
+    
+@login_required
+def restricted(request):
+    return HttpResponse("Since you're loggen in, you can see this text!")
