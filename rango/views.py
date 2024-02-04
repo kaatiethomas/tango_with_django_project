@@ -24,14 +24,18 @@ def index(request):
 
     # call the helper function to handle cookies
     visitor_cookie_handler(request)
-    context_dict['visits'] = request.session['visits']
 
     response = render(request, 'rango/index.html', context=context_dict)
     return response
 
 def about(request):
     context_dict = {'yourname': 'Katie'}
-    return render(request, 'rango/about.html', context=context_dict)
+
+    visitor_cookie_handler(request)
+    context_dict['visits'] = request.session['visits']
+    response = render(request, 'rango/about.html', context=context_dict)
+
+    return response
 
 def show_category(request, category_name_slug):
     context_dict={}
